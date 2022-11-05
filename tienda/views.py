@@ -1,4 +1,4 @@
-from dgit jango.shortcuts import render
+from django.shortcuts import render
 from .models import *
 
 # Create your views here.
