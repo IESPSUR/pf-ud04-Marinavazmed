@@ -2,6 +2,10 @@
 <head>
 </head>
 <body>
-    {{ all_objects }}
+    <p>QuerySet recibida en el template: {{ all_objects }} </p>
+    <ul>Lista generada:</ul>
+    {% for i in all_objects %}
+        <li>{{ i }}</li>
+    {% endfor %}
 </body>
 </html>
