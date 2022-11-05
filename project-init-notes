@@ -1,9 +1,11 @@
 git clone url
 cd project
-python3 -m venv venv
-source venv/bin/activate
 python -m pip install --upgrade pip
+python3 -m venv venv // pip install virtualenv
+source venv/bin/activate
 pip install -r requirements.txt
+django-admin startproject (si no hay nada creado)
+python manage.py startapp
 python manage.py migrate
 python manage.py runserver
 python manage.py startapp polls
