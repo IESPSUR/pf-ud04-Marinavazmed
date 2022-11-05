@@ -2,10 +2,13 @@
 <head>
 </head>
 <body>
-    <p>QuerySet recibida en el template: {{ all_objects }} </p>
-    <ul>Lista generada:</ul>
-    {% for i in all_objects %}
-        <li>{{ i }}</li>
+    <p>Lista recibida en el template: {{ listaquery }}</p>
+    <h2>Listado de productos:</h2>
+    {% for item in listaquery %}
+        <hr>
+        {% for campo, valor in item.items %}
+           <p> {{ campo }} : {{ valor }} </p>
+        {% endfor %}
     {% endfor %}
 </body>
 </html>
