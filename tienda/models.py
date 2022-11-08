@@ -33,3 +33,8 @@ class FormularioProductos(ModelForm):
     class Meta:
         model = Producto
         fields = '__all__'
+
+class FormularioProductosNoId(ModelForm):
+    class Meta:
+        model = Producto
+        exclude = ['id']

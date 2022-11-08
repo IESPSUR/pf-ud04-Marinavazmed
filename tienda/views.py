@@ -34,7 +34,20 @@ def eliminar(request, id):
         return redirect('listado')
 
 #TODO
-def editar(request):
-    all_objects = Producto.objects.all().values()
-    listaquery = list(all_objects)
-    return render(request, 'tienda/listado.html', {'listaquery' : listaquery})
+def editar(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    form = FormularioProductosNoId(request.POST, instance=producto)
+    #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
+    #Así rellenará automáticamente sus campos con los datos ya preestablecidos
+    if form.is_valid():
+            producto.id = id
+            producto.nombre = form.cleaned_data['nombre']
+            producto.modelo = form.cleaned_data['modelo']
+            producto.unidades = form.cleaned_data['unidades']
+            producto.precio = form.cleaned_data['precio']
+            producto.detalles = form.cleaned_data['detalles']
+            producto.marca = form.cleaned_data['marca']
+            producto.save()
+            return redirect('listado')
+    else:
+        return render(request, 'tienda/editar.html', {'form' : form})
