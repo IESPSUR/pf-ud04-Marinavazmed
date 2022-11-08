@@ -5,7 +5,7 @@ from django.forms import ModelForm
 # Create your models here.
 
 class Marca(models.Model):
-    nombre = models.CharField(max_length=30, unique=True, default='Sin Marca asignada')
+    nombre = models.CharField(max_length=30, default='Sin Marca asignada', primary_key=True, unique=True)
     def __str__(self):
         return self.nombre
 
@@ -28,3 +28,8 @@ class Compra(models.Model):
     unidades = models.IntegerField()
     importe = models.FloatField()
     nombre = models.ForeignKey('Producto', to_field='nombre', related_name='Nombre', on_delete=models.RESTRICT)
+
+class FormularioProductos(ModelForm):
+    class Meta:
+        model = Producto
+        fields = '__all__'
