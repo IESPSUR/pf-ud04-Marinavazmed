@@ -23,7 +23,9 @@ def add(request):
                           marca = form.cleaned_data['marca'])
 
         producto.save()
-    return render(request, 'tienda/add.html', {'form' : form})
+        return render(request, 'tienda/confirmacion.html', {'producto' : producto})
+    else:
+        return render(request, 'tienda/add.html', {'form' : form})
 
 def eliminar(request, id):
     producto = get_object_or_404(Producto, id=id)
