@@ -31,7 +31,7 @@ def eliminar(request, id):
     producto = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
         producto.delete()
-    return redirect('listado')
+        return redirect('listado')
 
 #TODO
 def editar(request):

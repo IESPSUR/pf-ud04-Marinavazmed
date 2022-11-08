@@ -1,10 +1,8 @@
-<html>
-<head></head>
-<body>
+{% extends 'tienda/base.html' %}
+{% block content %}
 <form method="post">
     {{ form }}
     {% csrf_token %}
     <button type="submit">Añadir</button>
 </form>
-</body>
-</html>
+{% endblock %}

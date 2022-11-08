@@ -1,5 +1,5 @@
-<html>
-<head></head>
+{% extends 'tienda/base.html' %}
+{% block content %}
 <body>
     <p>Añadido con éxito, producto:</p>
     <li>{{ producto.nombre }}</li>
@@ -7,5 +7,4 @@
     <li>{{ producto.modelo }}</li>
     <li>{{ producto.unidades }}</li>
     <a href="{% url 'listado' %}">Volver a la lista de productos</a>
-</body>
-</html>
+{% endblock %}
