@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm
+from django.forms import ModelForm, forms
 
 
 # Create your models here.
@@ -10,7 +10,7 @@ class Marca(models.Model):
         return self.nombre
 
 class Producto(models.Model):
-    id = models.CharField(max_length=30, primary_key=True, unique=True)
+#    id = models.CharField(max_length=30, primary_key=True, unique=True)
     nombre = models.CharField(max_length=30, null=True, unique=True)
     modelo = models.CharField(max_length=30)
     unidades = models.IntegerField(null=True)
@@ -34,7 +34,3 @@ class FormularioProductos(ModelForm):
         model = Producto
         fields = '__all__'
 
-class FormularioProductosNoId(ModelForm):
-    class Meta:
-        model = Producto
-        exclude = ['id']

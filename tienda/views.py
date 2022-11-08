@@ -14,8 +14,8 @@ def add(request):
     form = FormularioProductos(request.POST)
 
     if form.is_valid():
-        producto=Producto(id= form.cleaned_data['id'],
-                          nombre= form.cleaned_data['nombre'],
+#        producto=Producto(id= form.cleaned_data['id'],
+        producto = Producto(nombre= form.cleaned_data['nombre'],
                           modelo= form.cleaned_data['modelo'],
                           unidades= form.cleaned_data['unidades'],
                           precio = form.cleaned_data['precio'],
@@ -36,11 +36,11 @@ def eliminar(request, id):
 #TODO
 def editar(request, id):
     producto = get_object_or_404(Producto, id=id)
-    form = FormularioProductosNoId(request.POST, instance=producto)
+    form = FormularioProductos(request.POST, instance=producto)
     #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
     #Así rellenará automáticamente sus campos con los datos ya preestablecidos
     if form.is_valid():
-            producto.id = id
+#            producto.id = id
             producto.nombre = form.cleaned_data['nombre']
             producto.modelo = form.cleaned_data['modelo']
             producto.unidades = form.cleaned_data['unidades']
