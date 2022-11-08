@@ -9,8 +9,17 @@
     {% for item in listaquery %}
         <hr>
         {% for campo, valor in item.items %}
-           <p> {{ campo }} : {{ valor }} </p>
+           <li> {{ campo }} : {{ valor }} </li>
         {% endfor %}
+        <a href="{% url 'editar' %}">Edición</a>
+        <form method="post" action="/tienda/eliminar/{{ item.id }}">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+        </form>
     {% endfor %}
+    <hr>
+    <p>
+        <p>Añadir nuevo producto</p>
+    </p>
 </body>
 </html>

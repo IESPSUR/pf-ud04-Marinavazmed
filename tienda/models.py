@@ -10,8 +10,9 @@ class Marca(models.Model):
         return self.nombre
 
 class Producto(models.Model):
+    id = models.CharField(max_length=30, primary_key=True, unique=True)
     nombre = models.CharField(max_length=30, null=True, unique=True)
-    modelo = models.CharField(max_length=30, primary_key=True, unique=True)
+    modelo = models.CharField(max_length=30)
     unidades = models.IntegerField(null=True)
     precio = models.FloatField(null=True)
     detalles = models.CharField(max_length=30, null=True)
