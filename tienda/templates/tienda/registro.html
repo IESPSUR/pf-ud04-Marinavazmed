@@ -1,0 +1,12 @@
+<html>
+<head></head>
+<body>
+    <h1>Registro de usuario</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ register_form }}
+		<button type="submit">Registrar</button>
+	</form>
+	<p>Si ya tienes una cuenta:, <a href="/login">logeate</a> aquí.</p>
+</body>
+</html>

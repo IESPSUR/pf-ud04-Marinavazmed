@@ -2,8 +2,8 @@
 {% block content %}
     <div>
         <form method="post">
-            {{ form }}
             {% csrf_token %}
+            {{ form }}
         <button type="submit">Añadir</button>
         </form>
     </div>

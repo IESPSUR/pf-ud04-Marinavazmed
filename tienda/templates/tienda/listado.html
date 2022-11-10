@@ -8,6 +8,7 @@
         {% for campo, valor in item.items %}
            <li> {{ campo }} : {{ valor }} </li>
         {% endfor %}
+        <!--botones para formulario de edicion y eliminación, específico para cada item-->
         <form method="post" action="/tienda/editar/{{ item.id }}">
             {% csrf_token %}
             <button type="submit">Editar</button>
@@ -18,6 +19,7 @@
         </form>
     {% endfor %}
     <hr>
+    <!--botón de añadir producto, al final de la lista-->
     <p>
         <a href="{% url 'add' %}">Añadir un producto</a>
     </p>
