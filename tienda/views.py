@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
-from .forms import UserCreationForm
-from django.contrib.auth import login
+from .forms import UserCreationForm, FormularioCompra
+from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
@@ -15,11 +15,31 @@ def listado(request):
     listaquery = list(all_objects)
     return render(request, 'tienda/listado.html', {'listaquery' : listaquery})
 
+def listadocompra(request):
+    all_objects = Producto.objects.all().values()
+    listaquery = list(all_objects)
+    return render(request, 'tienda/listadocompra.html', {'listaquery' : listaquery})
+
+def compraid(request, id=id):
+    producto = get_object_or_404(Producto, id=id)
+    form = FormularioCompra(request.POST)
+
+    if request.method == "POST":
+        if form.is_valid():
+            cantidad = form.cleaned_data['cantidad']
+            if(producto.unidades > cantidad):
+                producto.unidades = producto.unidades - cantidad
+                producto.save()
+                return redirect('listadocompra')
+
+    return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
+
+
+
 def add(request):
     form = FormularioProductos(request.POST)
 
     if form.is_valid():
-#        producto=Producto(id= form.cleaned_data['id'],
         producto = Producto(nombre= form.cleaned_data['nombre'],
                           modelo= form.cleaned_data['modelo'],
                           unidades= form.cleaned_data['unidades'],
@@ -38,7 +58,6 @@ def eliminar(request, id):
         producto.delete()
         return redirect('listado')
 
-#TODO
 def editar(request, id):
     producto = get_object_or_404(Producto, id=id)
     form = FormularioProductos(request.POST, instance=producto)
@@ -67,11 +86,10 @@ def registro(request):
             return redirect('tienda/admin')
         else:
             messages.error(request, "Formulario no válido")
-            form = UserCreationForm()
-            return render(request, "tienda/registro.html", {"register_form":form})
+    form = UserCreationForm()
+    return render(request, "tienda/registro.html", {"register_form":form})
 
-#TODO
-def login(request):
+def login_usr(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -88,4 +106,10 @@ def login(request):
             messages.error(request, "Fallo en el inicio de sesión")
     form = AuthenticationForm()
     return render(request, "tienda/login.html", {'login_form':form})
+
+def logout_usr(request):
+    logout(request)
+    messages.info(request, "Inicio de sesión cerrado")
+    return redirect("listado")
+
 

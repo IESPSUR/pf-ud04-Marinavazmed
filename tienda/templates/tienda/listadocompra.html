@@ -1,0 +1,15 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+    <h2>Productos disponibles:</h2>
+    {% for item in listaquery %}
+        <hr>
+        {% for campo, valor in item.items %}
+           <li> {{ campo }} : {{ valor }} </li>
+        {% endfor %}
+        <form method="post" action="/compraid/{{ item.id }}">
+            {% csrf_token %}
+            <button type="submit">Comprar</button>
+        </form>
+
+    {% endfor %}
+{% endblock %}

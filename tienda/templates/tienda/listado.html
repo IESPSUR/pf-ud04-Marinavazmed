@@ -9,18 +9,29 @@
            <li> {{ campo }} : {{ valor }} </li>
         {% endfor %}
         <!--botones para formulario de edicion y eliminación, específico para cada item-->
-        <form method="post" action="/tienda/editar/{{ item.id }}">
-            {% csrf_token %}
-            <button type="submit">Editar</button>
-        </form>
-        <form method="post" action="/tienda/eliminar/{{ item.id }}">
-            {% csrf_token %}
-            <button type="submit">Eliminar</button>
-        </form>
+        {% if user.is_authenticated %}
+            <form method="post" action="/tienda/editar/{{ item.id }}">
+                {% csrf_token %}
+                <button type="submit">Editar</button>
+            </form>
+            <form method="post" action="/tienda/eliminar/{{ item.id }}">
+                {% csrf_token %}
+                <button type="submit">Eliminar</button>
+            </form>
+        {% endif %}
     {% endfor %}
     <hr>
     <!--botón de añadir producto, al final de la lista-->
-    <p>
-        <a href="{% url 'add' %}">Añadir un producto</a>
-    </p>
+    {% if user.is_authenticated %}
+        <p>
+            <a href="{% url 'add' %}">Añadir un producto</a>
+        </p>
+        <p>
+        <a href="{% url 'logout_usr' %}">Cierra sesión</a>
+        </p>
+    {% else %}
+           <a href="{% url 'login_usr' %}">Inicia sesión para administrar</a>
+    {% endif %}
+
+
 {% endblock %}

@@ -19,3 +19,6 @@ from django.contrib.auth.models import User
 #         if commit:
 #             user.save()
 #         return user
+
+class FormularioCompra(forms.Form):
+    cantidad = forms.IntegerField(required=True)

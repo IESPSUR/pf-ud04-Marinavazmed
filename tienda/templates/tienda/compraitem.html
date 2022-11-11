@@ -1,0 +1,18 @@
+<html>
+<head></head>
+<body>
+    <p>Producto comprado:</p>
+        {{ producto }}
+    <p>Unidades disponibles:</p>
+        {{ unidades }}
+    <form method="post" action="/compraid/{{ id }}">
+        {{ form }}
+        {% csrf_token %}
+        <button type="submit">Comprar</button>
+    </form>
+    <form method="post" action="/listadocompra/">
+        {% csrf_token %}
+        <button type="submit">Cancelar</button>
+    </form>
+</body>
+</html>

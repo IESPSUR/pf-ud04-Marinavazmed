@@ -34,3 +34,4 @@ class FormularioProductos(ModelForm):
         model = Producto
         fields = '__all__'
 
+
