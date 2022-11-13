@@ -24,7 +24,8 @@ class Producto(models.Model):
 
 
 class Compra(models.Model):
-    fecha = models.DateField()
+    usuario = models.CharField(max_length=30)
+    fecha = models.DateTimeField()
     unidades = models.IntegerField()
     importe = models.FloatField()
     nombre = models.ForeignKey('Producto', to_field='nombre', related_name='Nombre', on_delete=models.RESTRICT)

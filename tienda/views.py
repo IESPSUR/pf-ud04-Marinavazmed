@@ -1,10 +1,12 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
-from .forms import UserCreationForm, FormularioCompra
+from .forms import UserCreationForm, FormularioCompra, FormularioBusqueda
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
+from datetime import datetime
 
 # Create your views here.
 def welcome(request):
@@ -30,6 +32,13 @@ def compraid(request, id=id):
             if(producto.unidades > cantidad):
                 producto.unidades = producto.unidades - cantidad
                 producto.save()
+                #Registramos la compra en la bbdd:
+                if request.user.is_authenticated:
+                    username = request.user.username
+                else:
+                    username = None
+                compra = Compra(usuario=username, fecha=datetime.now().date() ,unidades=cantidad, importe=(cantidad*producto.precio), nombre=producto)
+                compra.save()
                 return redirect('listadocompra')
 
     return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
@@ -82,8 +91,7 @@ def registro(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success("Usuario registrado correctamente")
-            return redirect('tienda/admin')
+            return redirect('listado')
         else:
             messages.error(request, "Formulario no válido")
     form = UserCreationForm()
@@ -111,5 +119,19 @@ def logout_usr(request):
     logout(request)
     messages.info(request, "Inicio de sesión cerrado")
     return redirect("listado")
+
+# def busqueda(request):
+#     form = FormularioBusqueda(request.POST)
+#     if request.method == "POST":
+#         if form.is_valid():
+#             try:
+#                 nombreprod = form.cleaned_data['nombre']
+#                 producto = Producto.objects.get(nombre=nombreprod)
+#                 return render(request, 'tienda/busqueda.html', {'producto': producto, 'form': form})
+#             except Producto.DoesNotExist:
+#                 return HttpResponse("Producto no encontrado")
+#     return render(request, 'tienda/busqueda.html', {'form':form})
+
+
 
 

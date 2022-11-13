@@ -14,4 +14,5 @@ urlpatterns = [
     path('logout/', views.logout_usr, name='logout_usr'),
     path('listadocompra/', views.listadocompra, name='listadocompra'),
     path('compraid/<int:id>', views.compraid, name='compraid'),
+#    path('busqueda/', views.busqueda, name='busqueda'),
 ]

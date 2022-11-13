@@ -1,0 +1,11 @@
+<html>
+<head></head>
+<body>
+    <form method="post">
+        <h3>Introduzca el nombre del producto </h3>
+        {{ form }}
+        {% csrf_token %}
+        <button type="submit">Buscar</button>
+    </form>
+</body>
+</html>
