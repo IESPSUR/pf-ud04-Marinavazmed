@@ -120,18 +120,18 @@ def logout_usr(request):
     messages.info(request, "Inicio de sesión cerrado")
     return redirect("listado")
 
-# def busqueda(request):
-#     form = FormularioBusqueda(request.POST)
-#     if request.method == "POST":
-#         if form.is_valid():
-#             try:
-#                 nombreprod = form.cleaned_data['nombre']
-#                 producto = Producto.objects.get(nombre=nombreprod)
-#                 return render(request, 'tienda/busqueda.html', {'producto': producto, 'form': form})
-#             except Producto.DoesNotExist:
-#                 return HttpResponse("Producto no encontrado")
-#     return render(request, 'tienda/busqueda.html', {'form':form})
-
+def busqueda(request):
+    form = FormularioBusqueda(request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            try:
+                nombreprod = form.cleaned_data['nombre']
+                productos = Producto.objects.filter(nombre__contains=nombreprod).values()
+                listaquery = list(productos)
+                return render(request, 'tienda/listadocompra.html', {'listaquery': listaquery})
+            except Producto.DoesNotExist:
+                return HttpResponse("Producto no encontrado")
+    return render(request, 'tienda/busqueda.html', {'form':form})
 
 
 
