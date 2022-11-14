@@ -9,20 +9,38 @@ from django.contrib.auth import login, authenticate
 from datetime import datetime
 
 # Create your views here.
+#INDEX
 def welcome(request):
     return render(request, 'tienda/index.html', {})
 
+
+
+#LISTADO:
 def listado(request):
+    """
+    Vista de listado de productos. Muestra CRUD si auth
+    """
     all_objects = Producto.objects.all().values()
     listaquery = list(all_objects)
     return render(request, 'tienda/listado.html', {'listaquery' : listaquery})
+#---------END LISTADO
 
+
+
+
+#PROCESO (VISTA Y DETALLE) DE COMPRA:
 def listadocompra(request):
+    """
+    Vista de listado de COMPRA de productos.
+    """
     all_objects = Producto.objects.all().values()
     listaquery = list(all_objects)
     return render(request, 'tienda/listadocompra.html', {'listaquery' : listaquery})
 
 def compraid(request, id=id):
+    """
+    Vista de DETALLE de compra de producto.
+    """
     producto = get_object_or_404(Producto, id=id)
     form = FormularioCompra(request.POST)
 
@@ -42,7 +60,12 @@ def compraid(request, id=id):
                 return redirect('listadocompra')
 
     return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
+#----------FIN VISTA DETALLE Y COMPRA
 
+
+
+
+#SECCIÓN INFORME PRODUCTOS
 def informe(request):
     all_marcas = Marca.objects.all().values()
     listamarcas = list(all_marcas)
@@ -51,8 +74,16 @@ def informe(request):
 def listado_marcas(request, nombre):
     listaproductos = Producto.objects.filter(marca=nombre).values()
     return render(request, 'tienda/listado.html', {'listaquery': listaproductos})
+#--------FIN SECCIÓN INFORME
 
+
+
+
+#CRUD
 def add(request):
+    """
+    CRUD añadir producto nuevo
+    """
     form = FormularioProductos(request.POST)
 
     if form.is_valid():
@@ -69,12 +100,14 @@ def add(request):
         return render(request, 'tienda/add.html', {'form' : form})
 
 def eliminar(request, id):
+    """CRUD eliminar producto"""
     producto = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
         producto.delete()
         return redirect('listado')
 
 def editar(request, id):
+    """CRUD editar producto"""
     producto = get_object_or_404(Producto, id=id)
     form = FormularioProductos(request.POST, instance=producto)
     #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
@@ -91,8 +124,13 @@ def editar(request, id):
             return redirect('listado')
     else:
         return render(request, 'tienda/editar.html', {'form' : form})
+#-------------FIN CRUD
 
+
+
+#AUTH
 def registro(request):
+    """Registro de usuario nuevo"""
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -105,6 +143,7 @@ def registro(request):
     return render(request, "tienda/registro.html", {"register_form":form})
 
 def login_usr(request):
+    """Logeo de usuario ya creado"""
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -123,10 +162,15 @@ def login_usr(request):
     return render(request, "tienda/login.html", {'login_form':form})
 
 def logout_usr(request):
+    """Cierre de sesión de usuario"""
     logout(request)
     messages.info(request, "Inicio de sesión cerrado")
     return redirect("listado")
+#------------FIN AUTH
 
+
+
+#FORMULARIO DE BÚSQUEDA
 def busqueda(request):
     form = FormularioBusqueda(request.POST)
     if request.method == "POST":
@@ -139,6 +183,7 @@ def busqueda(request):
             except Producto.DoesNotExist:
                 return HttpResponse("Producto no encontrado")
     return render(request, 'tienda/busqueda.html', {'form':form})
+#----------------FIN BUSQUEDA
 
 
 
