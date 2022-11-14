@@ -15,4 +15,6 @@ urlpatterns = [
     path('listadocompra/', views.listadocompra, name='listadocompra'),
     path('compraid/<int:id>', views.compraid, name='compraid'),
     path('busqueda/', views.busqueda, name='busqueda'),
+    path('informe/', views.informe, name='informe'),
+    path('listado_marcas/<str:nombre>', views.listado_marcas, name='listado_marcas'),
 ]

@@ -1,0 +1,11 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+    <p>Selecciona una marca: </p>
+        {% for marca in listamarcas %}
+            <hr>
+            <form method="post" action="/listado_marcas/{{ marca.nombre }}">
+            {% csrf_token %}
+            <button type="submit">{{ marca.nombre }}</button>
+        </form>
+        {% endfor %}
+{% endblock %}

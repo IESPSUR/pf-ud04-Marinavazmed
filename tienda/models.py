@@ -10,13 +10,12 @@ class Marca(models.Model):
         return self.nombre
 
 class Producto(models.Model):
-#    id = models.CharField(max_length=30, primary_key=True, unique=True)
-    nombre = models.CharField('Nombre', max_length=30, null=True, unique=True)
-    modelo = models.CharField('Modelo', max_length=30)
-    unidades = models.IntegerField(null=True)
-    precio = models.FloatField(null=True)
-    detalles = models.CharField(max_length=30, null=True)
-    marca = models.ForeignKey(Marca, on_delete=models.RESTRICT, verbose_name="Marca", null=True, default=0)
+    nombre = models.CharField(max_length=30, unique=True)
+    modelo = models.CharField(max_length=30)
+    unidades = models.PositiveIntegerField()
+    precio = models.FloatField()
+    detalles = models.CharField(max_length=30, blank=True)
+    marca = models.ForeignKey(Marca, on_delete=models.RESTRICT, verbose_name="Marca", default=0)
 
     def __str__(self):
         return self.nombre

@@ -43,7 +43,14 @@ def compraid(request, id=id):
 
     return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
 
+def informe(request):
+    all_marcas = Marca.objects.all().values()
+    listamarcas = list(all_marcas)
+    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas})
 
+def listado_marcas(request, nombre):
+    listaproductos = Producto.objects.filter(marca=nombre).values()
+    return render(request, 'tienda/listado.html', {'listaquery': listaproductos})
 
 def add(request):
     form = FormularioProductos(request.POST)
