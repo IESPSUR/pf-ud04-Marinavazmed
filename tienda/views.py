@@ -1,3 +1,4 @@
+import transaction as transaction
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
@@ -7,8 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from datetime import datetime
-from django.db.models import Count
 from django.db.models import Sum
+from django.db import transaction
 
 # Create your views here.
 #INDEX
@@ -39,6 +40,7 @@ def listadocompra(request):
     listaquery = list(all_objects)
     return render(request, 'tienda/listadocompra.html', {'listaquery' : listaquery})
 
+@transaction.atomic
 def compraid(request, id=id):
     """
     Vista de DETALLE de compra de producto.
@@ -60,6 +62,8 @@ def compraid(request, id=id):
                 compra = Compra(usuario=username, fecha=datetime.now().date() ,unidades=cantidad, importe=(cantidad*producto.precio), nombre=producto)
                 compra.save()
                 return redirect('listadocompra')
+            else:
+                raise forms.ValidationError('Has introducido demasiadas unidades')
 
     return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
 #----------FIN VISTA DETALLE Y COMPRA
@@ -82,7 +86,7 @@ def informe(request):
     #top_ten = Compra.objects.values('nombre').order_by('nombre').annotate(count=Count('unidades'))
     #top_ten = Compra.objects.annotate(num_ventas=Count('unidades'))
 
-    top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('total_ventas')[:10]
+    top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('-total_ventas')[:10]
 
     return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'top_ten':top_ten})
 
