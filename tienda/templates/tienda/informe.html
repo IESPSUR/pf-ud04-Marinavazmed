@@ -2,10 +2,20 @@
 {% block content %}
     <p>Selecciona una marca: </p>
         {% for marca in listamarcas %}
-            <hr>
-            <form method="post" action="/listado_marcas/{{ marca.nombre }}">
-            {% csrf_token %}
-            <button type="submit">{{ marca.nombre }}</button>
-        </form>
+            <p>
+                <form method="post" action="/listado_marcas/{{ marca.nombre }}">
+                    {% csrf_token %}
+                    <button type="submit">{{ marca.nombre }}</button>
+                </form>
+            </p>
         {% endfor %}
+
+    <hr>
+    <p>Top 10 de productos vendidos:</p>
+        {% for item in top_ten %}
+            Objeto: {{ item.nombre }}, unidades: {{ item.total_ventas }}
+        {% endfor %}
+    <hr>
+    <p>Top 10 mejores clientes:</p>
+
 {% endblock %}

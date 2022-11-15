@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from datetime import datetime
+from django.db.models import Count
+from django.db.models import Sum
 
 # Create your views here.
 #INDEX
@@ -69,7 +71,20 @@ def compraid(request, id=id):
 def informe(request):
     all_marcas = Marca.objects.all().values()
     listamarcas = list(all_marcas)
-    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas})
+
+    #PRUEBAS:
+    # top_ten = (Compra.objects
+    #           .values('unidades', 'nombre')
+    #           .annotate(count=Count('unidades'))
+    #           .order_by('unidades')[:10]
+    #           )
+    #top_ten = Compra.objects.annotate(num_venta=Count('unidades')).order_by('num_venta')[:10]
+    #top_ten = Compra.objects.values('nombre').order_by('nombre').annotate(count=Count('unidades'))
+    #top_ten = Compra.objects.annotate(num_ventas=Count('unidades'))
+
+    top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('total_ventas')[:10]
+
+    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'top_ten':top_ten})
 
 def listado_marcas(request, nombre):
     listaproductos = Producto.objects.filter(marca=nombre).values()
