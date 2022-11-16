@@ -1,6 +1,6 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
-    <p>Selecciona una marca: </p>
+    <h3>Selecciona una marca: </h3>
         {% for marca in listamarcas %}
             <p>
                 <form method="post" action="/listado_marcas/{{ marca.nombre }}">
@@ -11,11 +11,18 @@
         {% endfor %}
 
     <hr>
-    <p>Top 10 de productos vendidos:</p>
+    <h3>Top 10 de productos vendidos:</h3>
+    <br>
         {% for item in top_ten %}
-            Objeto: {{ item.nombre }}, unidades: {{ item.total_ventas }}
+            <li>{{ item.nombre }}, {{ item.total_ventas }} unidades.</li>
+            <br>
         {% endfor %}
     <hr>
-    <p>Top 10 mejores clientes:</p>
+    <h3>Top 10 mejores clientes:</h3>
+    <br>
+    {% for cliente in top_ten_usuario %}
+        <li>{{ cliente.usuario }}, con un total de {{ cliente.total_compra_usuario }} euros gastados.</li>
+        <br>
+    {% endfor %}
 
 {% endblock %}

@@ -1,4 +1,3 @@
-import transaction as transaction
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
@@ -10,6 +9,7 @@ from django.contrib.auth import login, authenticate
 from datetime import datetime
 from django.db.models import Sum
 from django.db import transaction
+from django.forms import ModelForm
 
 # Create your views here.
 #INDEX
@@ -75,20 +75,9 @@ def compraid(request, id=id):
 def informe(request):
     all_marcas = Marca.objects.all().values()
     listamarcas = list(all_marcas)
-
-    #PRUEBAS:
-    # top_ten = (Compra.objects
-    #           .values('unidades', 'nombre')
-    #           .annotate(count=Count('unidades'))
-    #           .order_by('unidades')[:10]
-    #           )
-    #top_ten = Compra.objects.annotate(num_venta=Count('unidades')).order_by('num_venta')[:10]
-    #top_ten = Compra.objects.values('nombre').order_by('nombre').annotate(count=Count('unidades'))
-    #top_ten = Compra.objects.annotate(num_ventas=Count('unidades'))
-
     top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('-total_ventas')[:10]
-
-    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'top_ten':top_ten})
+    top_ten_usuario = Compra.objects.values('usuario').annotate(total_compra_usuario=Sum('unidades')).order_by('-total_compra_usuario')[:10]
+    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'top_ten':top_ten, 'top_ten_usuario':top_ten_usuario})
 
 def listado_marcas(request, nombre):
     listaproductos = Producto.objects.filter(marca=nombre).values()

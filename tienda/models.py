@@ -15,7 +15,7 @@ class Producto(models.Model):
     unidades = models.PositiveIntegerField()
     precio = models.FloatField()
     detalles = models.CharField(max_length=30, blank=True)
-    marca = models.ForeignKey(Marca, on_delete=models.RESTRICT, verbose_name="Marca", default=0)
+    marca = models.ForeignKey(Marca, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.nombre
