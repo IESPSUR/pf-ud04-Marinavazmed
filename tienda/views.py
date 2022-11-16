@@ -114,9 +114,11 @@ def add(request):
         return render(request, 'tienda/add.html', {'form' : form})
 
 def eliminar(request, id):
-    """CRUD eliminar producto"""
+    """CRUD eliminar producto. Descomentar las líneas comentadas para eliminar la proteccion de fk"""
     producto = get_object_or_404(Producto, id=id)
+#    compra = get_object_or_404(Compra, nombre=producto)
     if request.method == 'POST':
+#        compra.delete()
         producto.delete()
         return redirect('listado')
 
@@ -166,10 +168,9 @@ def login_usr(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request,user)
-                messages.info(request, "Logeado correctamente")
                 return redirect("listado")
             else:
-                messages.error(request, "Fallo en el inicio de sesión")
+                messages.error(request, "Error en el inicio de sesión")
         else:
             messages.error(request, "Fallo en el inicio de sesión")
     form = AuthenticationForm()
@@ -178,7 +179,6 @@ def login_usr(request):
 def logout_usr(request):
     """Cierre de sesión de usuario"""
     logout(request)
-    messages.info(request, "Inicio de sesión cerrado")
     return redirect("listado")
 #------------FIN AUTH
 

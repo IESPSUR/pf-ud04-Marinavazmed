@@ -6,6 +6,11 @@
 		{% csrf_token %}
 		{{ register_form }}
 		<button type="submit">Registrar</button>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{message}}</div>
+            {% endfor %}
+        {% endif %}
 	</form>
 	<p>Si ya tienes una cuenta:, <a href="/login">logeate</a> aquí.</p>
 </body>
