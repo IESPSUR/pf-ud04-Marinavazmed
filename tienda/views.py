@@ -36,8 +36,7 @@ def listadocompra(request):
     """
     Vista de listado de COMPRA de productos.
     """
-    all_objects = Producto.objects.all().values()
-    listaquery = list(all_objects)
+    listaquery = list(Producto.objects.all().values())
     return render(request, 'tienda/listadocompra.html', {'listaquery' : listaquery})
 
 @transaction.atomic
@@ -73,15 +72,13 @@ def compraid(request, id=id):
 
 #SECCIÓN INFORME PRODUCTOS
 def informe(request):
-    all_marcas = Marca.objects.all().values()
-    listamarcas = list(all_marcas)
-
-    all_compras = Compra.objects.all().values('usuario').distinct()
-    all_compras = list(all_compras)
+    all_marcas = list(Marca.objects.all().values())
+    all_compras = list(Compra.objects.all().values('usuario').distinct())
 
     top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('-total_ventas')[:10]
-    top_ten_usuario = Compra.objects.values('usuario').annotate(total_compra_usuario=Sum('unidades')).order_by('-total_compra_usuario')[:10]
-    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'listacompras' : all_compras, 'top_ten':top_ten, 'top_ten_usuario':top_ten_usuario})
+    top_ten_usuario = Compra.objects.values('usuario').annotate(total_compra_usuario=Sum('importe')).order_by('-total_compra_usuario')[:10]
+
+    return render(request, 'tienda/informe.html', {'listamarcas':all_marcas, 'listacompras' : all_compras, 'top_ten':top_ten, 'top_ten_usuario':top_ten_usuario})
 
 def listado_marcas(request, nombre):
     listaproductos = Producto.objects.filter(marca=nombre).values()
