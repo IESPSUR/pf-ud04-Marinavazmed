@@ -1,11 +1,21 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
-    <h3>Selecciona una marca: </h3>
+    <h3>Selecciona una marca para visualizar sus productos: </h3>
         {% for marca in listamarcas %}
             <p>
                 <form method="post" action="/listado_marcas/{{ marca.nombre }}">
                     {% csrf_token %}
                     <button type="submit">{{ marca.nombre }}</button>
+                </form>
+            </p>
+        {% endfor %}
+    <hr>
+    <h3>Selecciona un cliente para visualizar sus compras:</h3>
+        {% for compra in listacompras %}
+            <p>
+                <form method="post" action="/listado_usuario/{{compra.usuario}}">
+                    {% csrf_token %}
+                    <button type="submit">{{ compra.usuario }}</button>
                 </form>
             </p>
         {% endfor %}

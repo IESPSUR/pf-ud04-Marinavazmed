@@ -17,4 +17,5 @@ urlpatterns = [
     path('busqueda/', views.busqueda, name='busqueda'),
     path('informe/', views.informe, name='informe'),
     path('listado_marcas/<str:nombre>', views.listado_marcas, name='listado_marcas'),
+    path('listado_usuario/<str:nombre>', views.listado_usuario, name='listado_usuario'),
 ]

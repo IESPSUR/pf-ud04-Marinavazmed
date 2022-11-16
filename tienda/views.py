@@ -75,13 +75,22 @@ def compraid(request, id=id):
 def informe(request):
     all_marcas = Marca.objects.all().values()
     listamarcas = list(all_marcas)
+
+    all_compras = Compra.objects.all().values('usuario').distinct()
+    all_compras = list(all_compras)
+
     top_ten = Compra.objects.values('nombre').annotate(total_ventas=Sum('unidades')).order_by('-total_ventas')[:10]
     top_ten_usuario = Compra.objects.values('usuario').annotate(total_compra_usuario=Sum('unidades')).order_by('-total_compra_usuario')[:10]
-    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'top_ten':top_ten, 'top_ten_usuario':top_ten_usuario})
+    return render(request, 'tienda/informe.html', {'listamarcas':listamarcas, 'listacompras' : all_compras, 'top_ten':top_ten, 'top_ten_usuario':top_ten_usuario})
 
 def listado_marcas(request, nombre):
     listaproductos = Producto.objects.filter(marca=nombre).values()
     return render(request, 'tienda/listado.html', {'listaquery': listaproductos})
+
+def listado_usuario(request, nombre):
+    listacompras = Compra.objects.filter(usuario=nombre).values()
+    return render(request, 'tienda/listado.html', {'listaquery' : listacompras})
+
 #--------FIN SECCIÓN INFORME
 
 
