@@ -128,8 +128,10 @@ def editar(request, id):
     form = FormularioProductos(request.POST, instance=producto)
     #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
     #Así rellenará automáticamente sus campos con los datos ya preestablecidos
+    #request.method == "POST"
+    #instancia con instance + if valid
+    #si no valid, form= instancia
     if form.is_valid():
-#            producto.id = id
             producto.nombre = form.cleaned_data['nombre']
             producto.modelo = form.cleaned_data['modelo']
             producto.unidades = form.cleaned_data['unidades']

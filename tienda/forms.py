@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 #         return user
 
 class FormularioCompra(forms.Form):
-    cantidad = forms.IntegerField(required=True)
+    cantidad = forms.IntegerField(required=True, min_value=1)
 
 class FormularioBusqueda(forms.Form):
     nombre = forms.CharField(required=True, max_length=30)
