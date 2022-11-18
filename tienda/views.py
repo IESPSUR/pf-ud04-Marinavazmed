@@ -23,7 +23,7 @@ def listado(request):
     """
     Vista de listado de productos. Muestra CRUD si auth
     """
-    all_objects = Producto.objects.all().values()
+    all_objects = Producto.objects.all().order_by('nombre').values()
     listaquery = list(all_objects)
     return render(request, 'tienda/listado.html', {'listaquery' : listaquery})
 #---------END LISTADO
@@ -87,7 +87,6 @@ def listado_marcas(request, nombre):
 def listado_usuario(request, nombre):
     listacompras = Compra.objects.filter(usuario=nombre).values()
     return render(request, 'tienda/listado.html', {'listaquery' : listacompras})
-
 #--------FIN SECCIÓN INFORME
 
 
