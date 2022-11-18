@@ -3,8 +3,10 @@
     <div>
     <p>Página de edición</p>
         <form method="post">
-            {{ form }}
             {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
             <button type="submit">Cambiar datos</button>
         </form>
     </div>

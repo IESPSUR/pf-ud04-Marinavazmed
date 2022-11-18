@@ -1,13 +1,15 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
-    <h2>Vista detallada del producto:</h2>
+    <h3>Vista detallada del producto:</h3>
        <li>Nombre: {{ producto }}</li>
-    <h3>Unidades disponibles:</h3>
+    <br>
+    <h5>Unidades disponibles:</h5>
         <li>{{ unidades }} Unidades </li>
+    <br>
     <form method="post" action="/compraid/{{ id }}">
-        <h3>Compra: </h3>
-        {{ form }}
         {% csrf_token %}
+        <h5>Compra: </h5>
+        {{ form }}
         <button type="submit">Comprar</button>
     </form>
     <form method="post" action="/listadocompra/">

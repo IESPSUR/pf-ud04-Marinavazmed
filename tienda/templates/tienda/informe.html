@@ -15,7 +15,7 @@
             <p>
                 <form method="post" action="/listado_usuario/{{compra.usuario}}">
                     {% csrf_token %}
-                    <button type="submit">{{ compra.usuario }}</button>
+                    <button class=".btn-primary" type="submit">{{ compra.usuario }}</button>
                 </form>
             </p>
         {% endfor %}

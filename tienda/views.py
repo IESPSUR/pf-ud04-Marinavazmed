@@ -11,7 +11,7 @@ from django.db.models import Sum
 from django.db import transaction
 from django.forms import ModelForm
 
-# Create your views here.
+
 #INDEX
 def welcome(request):
     return render(request, 'tienda/index.html', {})
@@ -123,15 +123,12 @@ def eliminar(request, id):
         return redirect('listado')
 
 def editar(request, id):
-    """CRUD editar producto"""
+    """CRUD editar producto PROTECTED"""
     producto = get_object_or_404(Producto, id=id)
-    form = FormularioProductos(request.POST, instance=producto)
-    #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
-    #Así rellenará automáticamente sus campos con los datos ya preestablecidos
-    #request.method == "POST"
-    #instancia con instance + if valid
-    #si no valid, form= instancia
-    if form.is_valid():
+
+    if request.method == 'POST':
+        form = FormularioProductos(request.POST, instance=producto)
+        if form.is_valid():
             producto.nombre = form.cleaned_data['nombre']
             producto.modelo = form.cleaned_data['modelo']
             producto.unidades = form.cleaned_data['unidades']
@@ -140,8 +137,32 @@ def editar(request, id):
             producto.marca = form.cleaned_data['marca']
             producto.save()
             return redirect('listado')
-    else:
-        return render(request, 'tienda/editar.html', {'form' : form})
+        else:
+            form = FormularioProductos(instance = producto)
+    return render(request, 'tienda/editar.html', {'producto':producto, 'form':form})
+
+
+# def editar(request, id):
+#     """CRUD editar producto sin conflicto bbdd"""
+#     producto = get_object_or_404(Producto, id=id)
+#     form = FormularioProductos(request.POST, instance=producto)
+#     #Es necesario el parámetro instance cuando creamos un formulario SOBRE un producto ya existente
+#     #Así rellenará automáticamente sus campos con los datos ya preestablecidos
+#     #request.method == "POST"
+#     #instancia con instance + if valid
+#     #si no valid, form= instancia
+#     if form.is_valid():
+#             producto.nombre = form.cleaned_data['nombre']
+#             producto.modelo = form.cleaned_data['modelo']
+#             producto.unidades = form.cleaned_data['unidades']
+#             producto.precio = form.cleaned_data['precio']
+#             producto.detalles = form.cleaned_data['detalles']
+#             producto.marca = form.cleaned_data['marca']
+#             producto.save()
+#             return redirect('listado')
+#     else:
+#         return render(request, 'tienda/editar.html', {'form' : form})
+
 #-------------FIN CRUD
 
 
@@ -188,6 +209,7 @@ def logout_usr(request):
 
 #FORMULARIO DE BÚSQUEDA
 def busqueda(request):
+    """Barra de búsqueda de productos"""
     form = FormularioBusqueda(request.POST)
     if request.method == "POST":
         if form.is_valid():

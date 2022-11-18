@@ -1,6 +1,5 @@
-<html>
-<head></head>
-<body>
+{% extends 'tienda/base.html' %}
+{% block content %}
   <h1>Login</h1>
   <form method="POST">
     {% csrf_token %}
@@ -13,5 +12,4 @@
       {% endfor %}
   {% endif %}
   <p>¿No tienes ninguna cuenta? <a href="/registro">Registrate</a>.</p>
-</body>
-</html>
+{% endblock %}
