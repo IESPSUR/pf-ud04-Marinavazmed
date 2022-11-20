@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
-from .forms import UserCreationForm, FormularioCompra, FormularioBusqueda
+from .forms import FormularioCompra, FormularioBusqueda, UserCreateForm
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -9,7 +9,6 @@ from django.contrib.auth import login, authenticate
 from datetime import datetime
 from django.db.models import Sum
 from django.db import transaction
-from django.forms import ModelForm
 
 
 #INDEX
@@ -21,7 +20,7 @@ def welcome(request):
 #LISTADO:
 def listado(request):
     """
-    Vista de listado de productos. Muestra CRUD si auth
+    Vista de listado de productos principal
     """
     all_objects = Producto.objects.all().order_by('nombre').values()
     listaquery = list(all_objects)
@@ -50,21 +49,25 @@ def compraid(request, id=id):
     if request.method == "POST":
         if form.is_valid():
             cantidad = form.cleaned_data['cantidad']
-            if(producto.unidades > cantidad):
+            if(producto.unidades >= cantidad):
                 producto.unidades = producto.unidades - cantidad
                 producto.save()
-                #Registramos la compra en la bbdd:
+                #2.-Registramos la compra en la bbdd:
                 if request.user.is_authenticated:
                     username = request.user.username
                 else:
                     username = None
+                #El campo nombre de la compra puede ser el modelo (FK) o un string, dependiendo de las relaciones entre tablas.
+                #El modelo producto tiene un __str__ definido que sólo devuelve el nombre
+                #nombre = producto.nombre en caso de fallo
                 compra = Compra(usuario=username, fecha=datetime.now().date() ,unidades=cantidad, importe=(cantidad*producto.precio), nombre=producto)
                 compra.save()
                 return redirect('listadocompra')
             else:
-                raise forms.ValidationError('Has introducido demasiadas unidades')
+                messages.error(request, "Lo sentimos. No hay suficientes unidades disponibles.")
 
-    return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'form':form, 'id':id})
+    form = FormularioCompra()
+    return render(request, 'tienda/compraitem.html', {'producto': producto, 'unidades':producto.unidades, 'precio' : producto.precio, 'form':form, 'id':id})
 #----------FIN VISTA DETALLE Y COMPRA
 
 
@@ -86,7 +89,7 @@ def listado_marcas(request, nombre):
 
 def listado_usuario(request, nombre):
     listacompras = Compra.objects.filter(usuario=nombre).values()
-    return render(request, 'tienda/listado.html', {'listaquery' : listacompras})
+    return render(request, 'tienda/listado_compras_usuario.html', {'listaquery' : listacompras})
 #--------FIN SECCIÓN INFORME
 
 
@@ -110,10 +113,11 @@ def add(request):
         producto.save()
         return render(request, 'tienda/confirmacion.html', {'producto' : producto})
     else:
+        form=FormularioProductos()
         return render(request, 'tienda/add.html', {'form' : form})
 
 def eliminar(request, id):
-    """CRUD eliminar producto. Descomentar las líneas comentadas para eliminar la proteccion de fk"""
+    """CRUD eliminar producto. Descomentar las líneas comentadas para eliminar la proteccion de fk en cascada de manera manual"""
     producto = get_object_or_404(Producto, id=id)
 #    compra = get_object_or_404(Compra, nombre=producto)
     if request.method == 'POST':
@@ -128,6 +132,7 @@ def editar(request, id):
     if request.method == 'POST':
         form = FormularioProductos(request.POST, instance=producto)
         if form.is_valid():
+            form.save()
             producto.nombre = form.cleaned_data['nombre']
             producto.modelo = form.cleaned_data['modelo']
             producto.unidades = form.cleaned_data['unidades']
@@ -137,7 +142,7 @@ def editar(request, id):
             producto.save()
             return redirect('listado')
         else:
-            form = FormularioProductos(instance = producto)
+            form = FormularioProductos(instance = producto, initial={'detalles':producto.detalles})
     return render(request, 'tienda/editar.html', {'producto':producto, 'form':form})
 
 
@@ -170,14 +175,14 @@ def editar(request, id):
 def registro(request):
     """Registro de usuario nuevo"""
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('listado')
         else:
             messages.error(request, "Formulario no válido")
-    form = UserCreationForm()
+    form = UserCreateForm()
     return render(request, "tienda/registro.html", {"register_form":form})
 
 def login_usr(request):
@@ -212,13 +217,14 @@ def busqueda(request):
     form = FormularioBusqueda(request.POST)
     if request.method == "POST":
         if form.is_valid():
-            try:
-                nombreprod = form.cleaned_data['nombre']
-                productos = Producto.objects.filter(nombre__contains=nombreprod).values()
-                listaquery = list(productos)
+            nombreprod = form.cleaned_data['nombre']
+            productos = Producto.objects.filter(nombre__contains=nombreprod).values()
+            listaquery = list(productos)
+            if len(listaquery)==0:
+                messages.error(request, 'El producto no se encuentra registrado.')
+            else:
                 return render(request, 'tienda/listadocompra.html', {'listaquery': listaquery})
-            except Producto.DoesNotExist:
-                return HttpResponse("Producto no encontrado")
+
     return render(request, 'tienda/busqueda.html', {'form':form})
 #----------------FIN BUSQUEDA
 

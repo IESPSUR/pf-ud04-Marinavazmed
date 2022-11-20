@@ -1,19 +1,24 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
-    <h3>Vista detallada del producto:</h3>
-       <li>Nombre: {{ producto }}</li>
+    <h3>Información sobre el producto:</h3>
+    <li><b>Nombre del producto:</b>{{ producto }}</li>
+    <li><b>Precio por unidad: </b> {{ precio }}</li>
     <br>
-    <h5>Unidades disponibles:</h5>
+    <h3>Unidades disponibles:</h3>
         <li>{{ unidades }} Unidades </li>
     <br>
     <form method="post" action="/compraid/{{ id }}">
         {% csrf_token %}
-        <h5>Compra: </h5>
         {{ form }}
-        <button type="submit">Comprar</button>
+        <button class="btn btn-success" type="submit">Comprar</button>
     </form>
     <form method="post" action="/listadocompra/">
         {% csrf_token %}
-        <button type="submit">Cancelar</button>
+        <button class="btn btn-danger" type="submit">Cancelar</button>
     </form>
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-info">{{message}}</div>
+      {% endfor %}
+  {% endif %}
 {% endblock %}

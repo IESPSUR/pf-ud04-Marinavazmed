@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm, forms
+from django.core.validators import MinValueValidator
 
 
 # Create your models here.
@@ -12,9 +13,9 @@ class Marca(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=30, unique=True)
     modelo = models.CharField(max_length=30)
-    unidades = models.PositiveIntegerField()
-    precio = models.FloatField()
-    detalles = models.CharField(max_length=30, blank=True)
+    unidades = models.PositiveIntegerField(default=1)
+    precio = models.FloatField(validators=[MinValueValidator(0.0)])
+    detalles = models.CharField(max_length=30, blank=True, default="Sin detalles")
     marca = models.ForeignKey(Marca, on_delete=models.RESTRICT)
 
     def __str__(self):
@@ -25,9 +26,10 @@ class Producto(models.Model):
 class Compra(models.Model):
     usuario = models.CharField(max_length=30)
     fecha = models.DateTimeField()
-    unidades = models.IntegerField()
-    importe = models.FloatField()
-    nombre = models.ForeignKey('Producto', to_field='nombre', related_name='Nombre', on_delete=models.RESTRICT)
+    unidades = models.IntegerField(validators=[MinValueValidator(0.0)])
+    importe = models.FloatField(validators=[MinValueValidator(0.0)])
+    nombre = models.CharField(max_length=30)
+#    nombre = models.ForeignKey('Producto', to_field='nombre', related_name='Nombre', on_delete=models.RESTRICT)
 
 class FormularioProductos(ModelForm):
     class Meta:

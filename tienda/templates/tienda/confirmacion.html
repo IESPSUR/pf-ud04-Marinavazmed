@@ -2,9 +2,9 @@
 {% block content %}
 <body>
     <p>Añadido con éxito, producto:</p>
-    <li>{{ producto.nombre }}</li>
-    <li>{{ producto.marca }}</li>
-    <li>{{ producto.modelo }}</li>
-    <li>{{ producto.unidades }}</li>
+    <li><b>Nombre:</b>{{ producto.nombre }}</li>
+    <li><b>Marca:</b>{{ producto.marca }}</li>
+    <li><b>Modelo: </b>{{ producto.modelo }}</li>
+    <li><b>Unidades</b>{{ producto.unidades }}</li>
     <a href="{% url 'listado' %}">Volver a la lista de productos</a>
 {% endblock %}

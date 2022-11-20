@@ -1,9 +1,15 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
     <form method="post">
-        <h3>Introduzca el nombre del producto </h3>
+        <h3>Búsqueda de productos </h3>
+        <br>
         {{ form }}
         {% csrf_token %}
-        <button type="submit">Buscar</button>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-info">{{message}}</div>
+      {% endfor %}
+      {% endif %}
     </form>
 {% endblock %}

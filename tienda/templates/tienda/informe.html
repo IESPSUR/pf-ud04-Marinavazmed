@@ -5,34 +5,38 @@
             <p>
                 <form method="post" action="/listado_marcas/{{ marca.nombre }}">
                     {% csrf_token %}
-                    <button type="submit">{{ marca.nombre }}</button>
+                    <button class="btn btn-info" type="submit">{{ marca.nombre }}</button>
                 </form>
             </p>
         {% endfor %}
     <hr>
     <h3>Selecciona un cliente para visualizar sus compras:</h3>
-        {% for compra in listacompras %}
-            <p>
+            {% for compra in listacompras %}
                 <form method="post" action="/listado_usuario/{{compra.usuario}}">
                     {% csrf_token %}
-                    <button class=".btn-primary" type="submit">{{ compra.usuario }}</button>
+                    <button class="btn btn-info" type="submit">{{ compra.usuario }}</button>
                 </form>
-            </p>
-        {% endfor %}
+            {% endfor %}
+
+
 
     <hr>
     <h3>Top 10 de productos vendidos:</h3>
     <br>
+        <ul class="list-group">
         {% for item in top_ten %}
-            <li>{{ item.nombre }}, {{ item.total_ventas }} unidades.</li>
+            <li class="list-group-item list-group-item-action">{{ item.nombre }}, {{ item.total_ventas }} unidades.</li>
             <br>
         {% endfor %}
+        </ul>
     <hr>
     <h3>Top 10 mejores clientes:</h3>
     <br>
+    <ul class="list-group">
     {% for cliente in top_ten_usuario %}
-        <li>{{ cliente.usuario }}, con un total de {{ cliente.total_compra_usuario }} euros gastados.</li>
+        <li class="list-group-item list-group-item-action">{{ cliente.usuario }}, con un total de {{ cliente.total_compra_usuario }} euros gastados.</li>
         <br>
     {% endfor %}
+    </ul>
 
 {% endblock %}

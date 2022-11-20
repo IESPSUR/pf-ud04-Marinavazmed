@@ -1,13 +1,12 @@
 {% extends 'tienda/base.html' %}
 {% block content %}
-    <div>
-    <p>Página de edición</p>
+    <h3>Página de edición</h3>
+        <br>
         <form method="post">
             {% csrf_token %}
-            <table>
-                {{ form.as_table }}
-            </table>
-            <button type="submit">Cambiar datos</button>
+            <div class="form-group">
+                {{ form }}
+            <button type="submit" class="btn btn-info">Cambiar datos</button>
+            </div>
         </form>
-    </div>
 {% endblock %}

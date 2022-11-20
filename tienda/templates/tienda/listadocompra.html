@@ -1,15 +1,28 @@
 {% extends 'tienda/base.html' %}
+{% load static %}
 {% block content %}
     <h2>Productos disponibles:</h2>
-    {% for item in listaquery %}
-        <hr>
-        {% for campo, valor in item.items %}
-           <li> {{ campo }} : {{ valor }} </li>
-        {% endfor %}
-        <form method="post" action="/compraid/{{ item.id }}">
-            {% csrf_token %}
-            <button type="submit">Comprar</button>
-        </form>
+        <table class="table table-bordered table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Modelo</th>
+            <th>Unidades</th>
+            <th>Precio</th>
+            <th>Detalles</th>
+            <th>Marca</th>
+        </tr>
+        {% for item in listaquery %}
+            <tr>
+                {% for valor in item.values %}
+                    <td> {{ valor }}</td>
+                {% endfor %}
+                <td>
+                    <form method="post" action="/compraid/{{ item.id }}">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Comprar</button>
+                    </form>
+                </td>
     {% endfor %}
     <p><a href="/busqueda">¿Buscas algún producto específico?</a></p>
 {% endblock %}

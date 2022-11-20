@@ -1,0 +1,23 @@
+{% extends 'tienda/base.html' %}
+{% load static %}
+{% block content %}
+    <h2>Listado de productos:</h2>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>Id</th>
+            <th>Nombre del usuario</th>
+            <th>Fecha de la compra</th>
+            <th>Unidades adquiridas</th>
+            <th>Importe total</th>
+            <th>Producto</th>
+        </tr>
+        {% for item in listaquery %}
+        <!--selecciona una entrada-->
+            <tr>
+                {% for valor in item.values %}
+                    <td> {{ valor }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
