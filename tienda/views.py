@@ -48,21 +48,15 @@ def compraid(request, id=id):
 
     if request.method == "POST":
         if form.is_valid():
-            cantidad = form.cleaned_data['cantidad']
-            if(producto.unidades >= cantidad):
-                producto.unidades = producto.unidades - cantidad
-                producto.save()
-                #2.-Registramos la compra en la bbdd:
-                if request.user.is_authenticated:
-                    username = request.user.username
-                else:
-                    username = None
-                #El campo nombre de la compra puede ser el modelo (FK) o un string, dependiendo de las relaciones entre tablas.
-                #El modelo producto tiene un __str__ definido que sólo devuelve el nombre
-                #nombre = producto.nombre en caso de fallo
-                compra = Compra(usuario=username, fecha=datetime.now().date() ,unidades=cantidad, importe=(cantidad*producto.precio), nombre=producto)
-                compra.save()
-                return redirect('listadocompra')
+            if request.user.is_authenticated:
+                cantidad = form.cleaned_data['cantidad']
+                if(producto.unidades >= cantidad):
+                    producto.unidades = producto.unidades - cantidad
+                    producto.save()
+                    #2.-Registramos la compra en la bbdd:
+                    compra = Compra(usuario=request.user, fecha=datetime.now().date() ,unidades=cantidad, importe=(cantidad*producto.precio), nombre=producto)
+                    compra.save()
+                    return redirect('listadocompra')
             else:
                 messages.error(request, "Lo sentimos. No hay suficientes unidades disponibles.")
 
